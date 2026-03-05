@@ -59,9 +59,10 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = ['id', 'course', 'title', 'video_url', 'duration', 'order']
         
 class EnrollmentSerializer(serializers.ModelSerializer):
+    course_title = serializers.CharField(source="course.title", read_only=True)
     class Meta:
         model = Enrollment
-        fields = ['id', 'student', 'course', 'enrolled_at']
+        fields = ['id', 'student', 'course', "course_title", 'enrolled_at']
         read_only_fields = ['student', 'enrolled_at']
         
 class LessonProgressSerializer(serializers.ModelSerializer):

@@ -4,6 +4,8 @@ from .serializers import (RegisterSerializer, UserSerializer, LoginSerializer, L
         LessonSerializer, EnrollmentSerializer, LessonProgressSerializer )
 from .permissions import IsInstructor, IsOwnerInstructor, IsOwnerInstructorOfLesson
 from django.contrib.auth import get_user_model, authenticate
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
@@ -95,7 +97,9 @@ class CourseListView(ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [AllowAny]
-
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['title', 'description']
+    
 class CourseDetailView(RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
@@ -127,6 +131,7 @@ class LessonCreateView(CreateAPIView):
 class LessonListView(ListAPIView):
     serializer_class =  LessonSerializer
     permission_classes = [AllowAny]
+    pagination_class = None
     
     def get_queryset(self):
         course_id = self.kwargs['course_id']
